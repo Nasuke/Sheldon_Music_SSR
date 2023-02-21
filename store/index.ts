@@ -17,7 +17,7 @@ const store = configureStore({
 // //     })
 // // 
 
-const wrapper = createWrapper<AppStore>(makeStore)
+const wrapper = createWrapper(() => store)
 export default wrapper
 // 自定义类型
 export type RootState = ReturnType<typeof store.getState>

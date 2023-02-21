@@ -1,13 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { getSearchSuggestion } from '../../service/module/home';
+import type { ISearchSuggest } from '../../service/module/home';
 
-
-type countType = number
 interface HomeInitialState {
-    count: number 
+    count: number,
+    navbar: ISearchSuggest
 }
 const initialHomeState: HomeInitialState = {
-    count:100
+    count: 10,
+    navbar: {} as ISearchSuggest
 }
 const homeSlice = createSlice({
     name: "home",
@@ -25,8 +27,15 @@ const homeSlice = createSlice({
                 ...state,
                 ...action.payload.home
             }
+        }).addCase(fetchSearchSuggest.fulfilled, (state, { payload }:PayloadAction<ISearchSuggest>) => {
+            state.navbar = payload
         })
     },
+})
+
+export const fetchSearchSuggest = createAsyncThunk("home/searchSuggest", async () => {
+    const res = await getSearchSuggestion()
+    return res.data
 })
 
 export const { changeCountAction } = homeSlice.actions

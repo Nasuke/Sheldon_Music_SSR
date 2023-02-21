@@ -3,14 +3,16 @@ import type { FC, ReactNode } from "react"
 
 import styles from './index.module.scss';
 import classNames from 'classnames';
+import type { ISearchSuggest } from '../../service/module/home';
 
 interface IProps {
-    children?: ReactNode
+    children?: ReactNode,
+    searchData?: ISearchSuggest
 }
 
 const Search: FC<IProps> = memo((props) => {
 
-
+    const { searchData } = props
     // 用input的focus的状态来控制panel状态
     const [inputFocus, setInputFocus] = useState<boolean>(false)
     // input默认显示
@@ -50,10 +52,11 @@ const Search: FC<IProps> = memo((props) => {
                 <div className={styles.shadow}></div>
                 <h2>热门搜索</h2>
                 <ul>
-                    <li>迪士尼Q2</li>
-                    <li>蓝牙耳机</li>
-                    <li>小飞棍</li>
-                    <li>Beats</li>
+                    {
+                        searchData?.configKey && searchData.configKey.map((item,index) => {
+                            return <li key={item[index + 1]}>{item[index + 1]}</li>
+                        })
+                    }
                 </ul>
             </div>
         </div>
