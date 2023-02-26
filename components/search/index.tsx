@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 import type { FC, ReactNode } from "react"
+import { useRouter } from "next/router";
 
 import styles from './index.module.scss';
 import classNames from 'classnames';
@@ -13,6 +14,7 @@ interface IProps {
 const Search: FC<IProps> = memo((props) => {
 
     const { searchData } = props
+    const router = useRouter()
     // 用input的focus的状态来控制panel状态
     const [inputFocus, setInputFocus] = useState<boolean>(false)
     // input默认显示
@@ -32,7 +34,18 @@ const Search: FC<IProps> = memo((props) => {
             setInputFocus(false)
         }
     }
-
+    function handleSearch(name: string) {
+        setPlaceHolder(name);
+        toSearch(name);
+    }
+    function toSearch(name: string) {
+        router.push({
+            pathname: "/search",
+            query: {
+                q: name,
+            },
+        });
+    }
     return (
         <div className={styles.search}>
             <div className={styles["search-bg"]}>
@@ -42,7 +55,7 @@ const Search: FC<IProps> = memo((props) => {
                     placeholder={placeHolder}
                     onFocus={() => handleInputFocus(true)}
                     onBlur={() => handleInputFocus(false)}
-                    onMouseDown={e => handleKeyDown(e as any)}
+                    onKeyDown={e => handleKeyDown(e as any)}
                 ></input>
             </div>
             <div className={classNames(
@@ -53,8 +66,11 @@ const Search: FC<IProps> = memo((props) => {
                 <h2>热门搜索</h2>
                 <ul>
                     {
-                        searchData?.configKey && searchData.configKey.map((item,index) => {
-                            return <li key={item[index + 1]}>{item[index + 1]}</li>
+                        searchData?.configKey && searchData.configKey.map((item, index) => {
+                            return <li
+                                key={item[index + 1]}
+                                onMouseDown={() => handleSearch(item[index + 1])}
+                            >{item[index + 1]}</li>
                         })
                     }
                 </ul>

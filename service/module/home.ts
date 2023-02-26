@@ -38,8 +38,34 @@ export interface IDigitalData {
 export interface IHomeInfo {
     banners: IBanner[],
     categorys: ICategory[],
-    recommends?:IRecommend[],
+    recommends?: IRecommend[],
     digitalData?: Partial<IDigitalData[]>,
+}
+export interface IProduct {
+    id?: number;
+    type?: number;
+    name?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    originalCost?: number;
+    couponLabelDesc?: string;
+    coverUrl?: string;
+}
+
+export interface IHotProduct {
+    id?: number;
+    products?: IProduct;
+}
+
+export interface IEditorRecommend {
+    count?: number;
+    hasMore?: boolean;
+    hotProduct?: IHotProduct[];
+}
+
+export interface IHotRecommend {
+    count?: number;
+    allProduct?: IProduct[];
 }
 
 export function getSearchSuggestion() {
@@ -48,3 +74,10 @@ export function getSearchSuggestion() {
 export function getHomeInfo() {
     return SCRequest.get<IResultData<IHomeInfo>>("/home/info")
 }
+export function getEditorRecommendData() {
+    return SCRequest.get<IResultData<IEditorRecommend>>("/hotproduct_v2/gets");
+}
+export function getHotRecommendData() {
+    return SCRequest.get<IResultData<IHotRecommend>>("/allProduct/gets");
+}
+
